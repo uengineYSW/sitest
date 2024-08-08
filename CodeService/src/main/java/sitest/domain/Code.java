@@ -1,4 +1,4 @@
-package sitest;
+package sitest.domain;
 
 public class Code {
 
@@ -15,8 +15,6 @@ public class Code {
     private String etc3;
     private String etc4;
     private String etc5;
-
-    // Getters and setters
 
     public Long getId() {
         return id;
