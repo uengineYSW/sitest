@@ -1,0 +1,27 @@
+name: test
+run-name: testing 
+on: [push]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Prepare Test Environment
+      run: |
+        cd CodeService
+        mkdir -p temp_test_storage
+        mv src/test/java/sitest/*.java temp_test_storage/
+        mv temp_test_storage/UpdateCodeTest.java src/test/java/sitest/
+    - name: Compile and Run Specific Test
+      run: |
+        cd CodeService
+        mvn test-compile -Dmaven.test.failure.ignore=true
+        mvn test -Dtest=sitest.UpdateCodeTest
+    - name: Restore Test Files
+      if: always()
+      run: |
+        cd CodeService
+        mv temp_test_storage/*.java src/test/java/sitest/
+        rm -rf temp_test_storage
