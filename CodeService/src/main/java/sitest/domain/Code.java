@@ -16,6 +16,8 @@ public class Code {
     private String etc4;
     private String etc5;
 
+    // Getters and setters
+
     public Long getId() {
         return id;
     }
@@ -118,5 +120,15 @@ public class Code {
 
     public void setEtc5(String etc5) {
         this.etc5 = etc5;
+    }
+
+    // Update method
+    public static void updateCode(ConnectLogCreated event) {
+        // Logic to update the code entity based on event parameters
+        // This is an example, it should be adjusted according to the actual business requirements
+        // Assuming we have a repository to fetch the existing code and update its details
+        Long logNo = event.getLogNo();
+        // Fetch code entity based on the logNo or any other parameter
+        // Apply updates and save the entity
     }
 }
