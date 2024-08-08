@@ -55,14 +55,11 @@ public class UpdateCodeTest {
     @Autowired
     private MessageVerifier<Message<?>> messageVerifier;
 
-    @Autowired
-    public CodeRepository repository;
-
     @Test
     @SuppressWarnings("unchecked")
     public void test0() {
         //given:
-        Code entity = new Code();
+
         entity.setId(1L);
         entity.setItemCode("A001");
         entity.setCodeNo("C001");
@@ -75,13 +72,16 @@ public class UpdateCodeTest {
         repository.save(entity);
 
         //when:
+
         ConnectLogCreated event = new ConnectLogCreated();
+
         event.setLogNo(1001L);
         event.setLoginDt(1639724400000L);
         event.setLoginId("user1");
         event.setLoginIdnm("User 1");
         event.setAccessIp("192.168.0.1");
 
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             String msg = objectMapper.writeValueAsString(event);
 
@@ -98,31 +98,33 @@ public class UpdateCodeTest {
                 );
 
             //then:
+
             Message<?> receivedMessage =
                 this.messageVerifier.receive(
                         "sitest",
                         5000,
                         TimeUnit.MILLISECONDS
                     );
+
             assertNotNull("Resulted event must be published", receivedMessage);
 
-            String receivedPayload = (String) receivedMessage.getPayload();
             CodeUpdated outputEvent = objectMapper.readValue(
-                receivedPayload,
+                receivedMessage.getPayload(),
                 CodeUpdated.class
             );
 
             LOGGER.info("Response received: {}", receivedMessage.getPayload());
 
-            assertEquals(1L, outputEvent.getId().longValue());
-            assertEquals("A001", outputEvent.getItemCode());
-            assertEquals("C001", outputEvent.getCodeNo());
-            assertEquals("001", outputEvent.getCode());
-            assertEquals("Code 1", outputEvent.getCodeName());
-            assertEquals("Y", outputEvent.getIsSys());
-            assertEquals("Y", outputEvent.getIsUse());
-            assertEquals("N/A", outputEvent.getEtc());
+            assertEquals(outputEvent.getId(), 1L);
+            assertEquals(outputEvent.getItemCode(), "A001");
+            assertEquals(outputEvent.getCodeNo(), "C001");
+            assertEquals(outputEvent.getCode(), "001");
+            assertEquals(outputEvent.getCodeName(), "Code 1");
+            assertEquals(outputEvent.getIsSys(), "Y");
+            assertEquals(outputEvent.getIsUse(), "Y");
+            assertEquals(outputEvent.getEtc(), "N/A");
         } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
             assertTrue("exception", false);
         }
     }

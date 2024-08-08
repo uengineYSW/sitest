@@ -13,12 +13,12 @@ jobs:
         cd CodeService
         mkdir -p temp_test_storage
         mv src/test/java/sitest/*.java temp_test_storage/
-        mv temp_test_storage/UpdateCodeTest.java src/test/java/sitest/
+        mv temp_test_storage/CreateCodeTest.java src/test/java/sitest/
     - name: Compile and Run Specific Test
       run: |
         cd CodeService
         mvn test-compile -Dmaven.test.failure.ignore=true
-        mvn test -Dtest=sitest.UpdateCodeTest
+        mvn test -Dtest=sitest.CreateCodeTest
     - name: Restore Test Files
       if: always()
       run: |
